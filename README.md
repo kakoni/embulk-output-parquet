@@ -24,7 +24,7 @@ This plugin writes Parquet files only to the local filesystem.
 - JSON columns are not supported.
 
 ## Example
-Example is written by maven style. rubygem style is also available.
+Example is written by rubygem style. Mvn style is also available.
 
 1. Write Parquet files locally.
 ```yaml
