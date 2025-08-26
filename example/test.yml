@@ -1,0 +1,13 @@
+in:
+  type: file
+  path_prefix: ./example/file.csv
+  parser:
+    type: csv
+    skip_header_lines: 1
+    columns:
+      - {name: a,  type: string}
+      - {name: b,  type: string}
+      - {name: c,  type: string}
+out:
+  type: parquet
+  output_dir: 'tmp'
