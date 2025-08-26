@@ -1,7 +1,7 @@
 // ParquetOutputPlugin.java
 package org.embulk.output;
 
-import io.github.shin1103.embulk.util.ClassLoaderSwap;
+import org.embulk.util.ClassLoaderSwap;
 import org.apache.avro.LogicalTypes;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericRecord;

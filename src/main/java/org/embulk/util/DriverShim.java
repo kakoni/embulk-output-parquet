@@ -1,4 +1,4 @@
-package io.github.shin1103.embulk.util;
+package org.embulk.util;
 
 import java.sql.*;
 import java.util.Properties;

@@ -1,4 +1,4 @@
-package io.github.shin1103.embulk.util;
+package org.embulk.util;
 
 /*
     This Class is based on embulk-output-parquet ClassLoaderSwap.java
