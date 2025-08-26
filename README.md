@@ -29,11 +29,7 @@ Example is written by maven style. rubygem style is also available.
 1. Write Parquet files locally.
 ```yaml
 out: 
-  type:
-    source: maven
-    group: io.github.shin1103 
-    name: parquet 
-    version: 0.2.0
+  type: parquet 
   output_dir: "/path/to/output"
   file_prefix: "part"
   compression: "SNAPPY"
