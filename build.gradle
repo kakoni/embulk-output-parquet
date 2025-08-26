@@ -55,7 +55,7 @@ dependencies {
 }
 
 embulkPlugin {
-    mainClass = "io.github.shin1103.embulk.output.parquet.ParquetOutputPlugin"
+    mainClass = "org.embulk.output.ParquetOutputPlugin"
     category = "output"
     type = "parquet"
 }

@@ -1,5 +1,5 @@
 // ParquetOutputPlugin.java
-package io.github.shin1103.embulk.output.parquet;
+package org.embulk.output;
 
 import io.github.shin1103.embulk.util.ClassLoaderSwap;
 import org.apache.avro.LogicalTypes;

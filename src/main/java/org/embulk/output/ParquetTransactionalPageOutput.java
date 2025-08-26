@@ -1,5 +1,5 @@
 // ParquetTransactionalPageOutput.java
-package io.github.shin1103.embulk.output.parquet;
+package org.embulk.output;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
