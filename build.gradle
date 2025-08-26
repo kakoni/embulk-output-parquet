@@ -81,9 +81,9 @@ javadocJar {
 publishing {
     publications {
         create('maven', MavenPublication)  {
-            groupId = ""
+            groupId = project.group
             artifactId = "embulk-output-parquet"
-            version = "0.1.0"
+            version = project.version
 
             from ((SoftwareComponent) components.java)
             // javadocJar and sourcesJar are added by java.withJavadocJar() and java.withSourcesJar() above.
@@ -151,14 +151,13 @@ signing {
 
 checkstyle {
     configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    toolVersion = '10.18.1'
 }
 
 checkstyleMain {
-    configFile = file("${project.rootDir}/config/checkstyle/default.xml")
     ignoreFailures = true
 }
 checkstyleTest {
-    configFile = file("${project.rootDir}/config/checkstyle/default.xml")
     ignoreFailures = true
 }
 

@@ -1,3 +1,5 @@
+exec:
+  min_output_tasks: 1
 in:
   type: file
   path_prefix: ./example/file.csv
