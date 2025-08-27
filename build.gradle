@@ -44,9 +44,14 @@ dependencies {
     implementation("org.embulk:embulk-util-config:0.5.0")
 
     implementation "org.apache.hadoop:hadoop-common:$hadoopVersion"
+    // Needed for Parquet reader builder classes that depend on MR APIs
+    implementation "org.apache.hadoop:hadoop-mapreduce-client-core:$hadoopVersion"
     implementation "org.apache.parquet:parquet-avro:1.15.2"
 
     testImplementation "junit:junit:4.13.2"
+    
+    // Add Mockito for better testing
+    testImplementation "org.mockito:mockito-core:4.11.0"
 
     testImplementation "org.embulk:embulk-spi:0.11"
     testImplementation "org.embulk:embulk-core:0.11.5"

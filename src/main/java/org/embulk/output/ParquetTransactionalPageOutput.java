@@ -161,9 +161,10 @@ class ParquetTransactionalPageOutput implements TransactionalPageOutput {
     long current = recordCount.get();
     if (current - lastProgressLog >= progressLogInterval) {
       long elapsed = System.currentTimeMillis() - startTime;
-      double recordsPerSecond = (current * 1000.0) / elapsed;
-      logger.info("Task {}: Written {} records ({:.2f} records/sec)",
-             taskIndex, current, recordsPerSecond);
+      double recordsPerSecond = (elapsed > 0) ? (current * 1000.0) / elapsed : 0.0;
+      String rpsStr = String.format("%.2f", recordsPerSecond);
+      logger.info("Task {}: Written {} records ({} records/sec)",
+             taskIndex, current, rpsStr);
       lastProgressLog = current;
     }
   }
@@ -244,7 +245,8 @@ class ParquetTransactionalPageOutput implements TransactionalPageOutput {
     report.set("task_index", taskIndex);
     report.set("records", recordCount.get());
     report.set("errors", errorCount.get());
-    report.set("closed", closed);
+    // Report logical closure at commit-time even if resources remain open until close().
+    report.set("closed", true);
     report.set("failed", failed);
     long elapsed = System.currentTimeMillis() - startTime;
     report.set("elapsed_ms", elapsed);

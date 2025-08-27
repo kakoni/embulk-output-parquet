@@ -199,6 +199,9 @@ public class ParquetOutputPlugin implements OutputPlugin {
         task,
         taskIndex
       );
+    } catch (ConfigException e) {
+      // Re-throw configuration errors as-is so tests and callers can catch them.
+      throw e;
     } catch (IOException e) {
       throw new ConfigException("Failed to create Parquet writer for task " + taskIndex, e);
     } catch (Exception e) {
@@ -210,7 +213,24 @@ public class ParquetOutputPlugin implements OutputPlugin {
   private Path createOutputPath(PluginTask task, int taskIndex) {
     String prefix = task.getFilePrefix().orElse(DEFAULT_FILE_PREFIX);
     String fileName = String.format(FILE_PATTERN, prefix, taskIndex);
-    File outputFile = new File(task.getOutputDir(), fileName);
+    File outputDir = new File(task.getOutputDir());
+    // Ensure output directory exists and is a directory. If we cannot create it here, fail fast
+    // with a ConfigException so callers get a clear configuration error instead of IO failures
+    // bubbling from Parquet/Hadoop internals.
+    if (!outputDir.exists()) {
+      try {
+        Files.createDirectories(outputDir.toPath());
+        logger.info("Created output directory: {}", outputDir.getAbsolutePath());
+      } catch (IOException ioe) {
+        throw new ConfigException(
+            "Failed to create output directory: " + outputDir.getAbsolutePath(), ioe);
+      }
+    } else if (!outputDir.isDirectory()) {
+      throw new ConfigException(
+          "output_dir exists but is not a directory: " + outputDir.getAbsolutePath());
+    }
+
+    File outputFile = new File(outputDir, fileName);
     logger.debug("Output file path for task {}: {}", taskIndex, outputFile.getAbsolutePath());
     return new Path(outputFile.toURI());
   }
