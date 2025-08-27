@@ -1,12 +1,13 @@
 package org.embulk.output;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.time.Instant;
-
 import org.apache.avro.LogicalTypes;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
@@ -16,7 +17,7 @@ import org.embulk.spi.type.Types;
 import org.junit.Test;
 
 /**
- * Minimal tests for basic functionality:
+ * Minimal tests for basic functionality.
  * - Epoch micros conversion
  * - Avro schema mapping for basic types
  * - Writing a single Parquet file
@@ -85,22 +86,22 @@ public class ParquetOutputPluginBasicTest {
     org.apache.avro.Schema avroSchema = ParquetOutputPlugin.buildAvroSchema(embulkSchema);
 
     // Private helpers via reflection (keeps test close to plugin logic)
-    Method mCreatePath = ParquetOutputPlugin.class
+    Method createPathMethod = ParquetOutputPlugin.class
         .getDeclaredMethod("createOutputPath", ParquetOutputPlugin.PluginTask.class, int.class);
-    mCreatePath.setAccessible(true);
-    Path outputPath = (Path) mCreatePath.invoke(plugin, task, 0);
+    createPathMethod.setAccessible(true);
+    Path outputPath = (Path) createPathMethod.invoke(plugin, task, 0);
 
-    Method mCreateWriter = ParquetOutputPlugin.class
+    Method createWriterMethod = ParquetOutputPlugin.class
         .getDeclaredMethod(
             "createParquetWriter",
             ParquetOutputPlugin.PluginTask.class,
             org.apache.avro.Schema.class,
             Path.class);
-    mCreateWriter.setAccessible(true);
+    createWriterMethod.setAccessible(true);
 
     org.apache.parquet.hadoop.ParquetWriter<GenericRecord> writer =
         (org.apache.parquet.hadoop.ParquetWriter<GenericRecord>)
-            mCreateWriter.invoke(plugin, task, avroSchema, outputPath);
+            createWriterMethod.invoke(plugin, task, avroSchema, outputPath);
     try {
       GenericRecord rec = new GenericData.Record(avroSchema);
       rec.put("id", 123L);
@@ -114,7 +115,9 @@ public class ParquetOutputPluginBasicTest {
     assertTrue("Parquet file should be non-empty", outFile.length() > 0L);
   }
 
-  private static void assertUnionWithType(org.apache.avro.Schema union, org.apache.avro.Schema.Type expected) {
+  private static void assertUnionWithType(
+      org.apache.avro.Schema union,
+      org.apache.avro.Schema.Type expected) {
     org.apache.avro.Schema nonNull = nonNullFromUnion(union);
     assertEquals(expected, nonNull.getType());
   }
@@ -129,4 +132,3 @@ public class ParquetOutputPluginBasicTest {
     throw new AssertionError("Union does not contain non-null type: " + union);
   }
 }
-
